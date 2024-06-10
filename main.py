@@ -29,9 +29,6 @@ def check_triggers(text):
     return False
 
 
-def send_message(user_id, text):
-    app.send_message(user_id, text)
-
 
 @app.on_message(filters.private & filters.incoming)
 async def handle_private_message(client, message):
