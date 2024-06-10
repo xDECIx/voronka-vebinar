@@ -15,7 +15,7 @@ class User(Base):
     status_updated_at = Column(DateTime, default=datetime.utcnow)
     last_message_time = Column(DateTime, default=None)
 
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+DATABASE_URL = "postgresql+asyncpg://postgres:admin123@localhost/voronka_db"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session = sessionmaker(
