@@ -45,31 +45,31 @@ async def handle_private_message(client, message):
             print(f"Получено сообщение с триггером от пользователя {user_id}: {text}")
             if user:
                 user.status = 'dead'
-                user.status_updated_at = datetime.datetime.utcnow()
+                user.status_updated_at = datetime.datetime.now()
                 await session.commit()
         else:
             if user and user in ready_users:
                 last_message_time = user.last_message_time
                 if last_message_time:
-                    time_delta = datetime.datetime.utcnow() - last_message_time
+                    time_delta = datetime.datetime.now() - last_message_time
 
                     if time_delta.total_seconds() >= 600:
-                        user.last_message_time = datetime.datetime.utcnow()
+                        user.last_message_time = datetime.datetime.now()
                         await session.commit()
 
                         if time_delta.total_seconds() >= 780:
-                            user.last_message_time = datetime.datetime.utcnow()
+                            user.last_message_time = datetime.datetime.now()
                             await session.commit()
                 else:
                     await asyncio.sleep(360)
-                    user.last_message_time = datetime.datetime.utcnow()
+                    user.last_message_time = datetime.datetime.now()
                     await session.commit()
             else:
                 await asyncio.sleep(360)
                 new_user = User(id=user_id, status='alive')
                 session.add(new_user)
                 await session.commit()
-                user.last_message_time = datetime.datetime.utcnow()
+                user.last_message_time = datetime.datetime.now()
                 await session.commit()
 
 
@@ -78,7 +78,8 @@ async def get_ready_users():
         async with async_session() as session:
             result = await session.execute(select(User).filter_by(status='alive'))
             ready_users = result.scalars().all()
-            return ready_users
+            if ready_users:
+                return ready_users
         await asyncio.sleep(5)   
 
 
